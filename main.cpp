@@ -17,6 +17,12 @@ public:
 
         Endpoint(RealType x, RealType y, unsigned long line_id) :
                 x(x), y(y), line_id(line_id) {}
+
+        bool operator<(const Endpoint &other) const {
+            return (x < other.x) ||
+                   (x == other.x && line_id < other.line_id) ||
+                   (x == other.x && line_id == other.line_id && y < other.y);
+        }
     };
 
 
@@ -42,6 +48,11 @@ public:
     }
 
 
+    static std::vector <Endpoint> find_intersections(std::vector <Endpoint> &lines) {
+        std::vector <Endpoint> intersections;
+        std::sort(lines.begin(), lines.end());
+        return lines;
+    }
 
 private:
     class uniform_endpoint_distribution {
@@ -66,6 +77,7 @@ private:
 
 int main() {
     std::vector <SweepLines<double>::Endpoint> lines = SweepLines<double>::draw_lines(10, 0, 10);
+    lines = SweepLines<double>::find_intersections(lines);
     SweepLines<double>::print(lines);
     return 0;
 }
