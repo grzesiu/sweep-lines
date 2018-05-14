@@ -35,7 +35,7 @@ public:
     }
 
 
-    static void print(std::vector <Endpoint> lines) {
+    static void print(const std::vector <Endpoint> &lines) {
         for (auto i : lines) {
             std::cout << i.x << " " << i.y << " " << i.line_id << std::endl;
         }
