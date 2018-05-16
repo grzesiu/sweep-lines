@@ -1,34 +1,43 @@
-#include <random>
-#include <iostream>
-#include <utility>
-#include <functional>
 #include <algorithm>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <random>
+#include <utility>
 
 template<class RealType = double>
 class SweepLines {
 public:
 
-    struct Endpoint {
+    class Endpoint {
+        friend class SweepLines;
+
         RealType x;
         RealType y;
-        unsigned long line_id;
+        Endpoint *other;
 
-        Endpoint() {};
+    public:
+        Endpoint() {}
 
-        Endpoint(RealType x, RealType y, unsigned long line_id) :
-                x(x), y(y), line_id(line_id) {}
+        Endpoint(RealType x, RealType y) :
+                x(x), y(y) {}
 
-        bool operator<(const Endpoint &other) const {
-            return (x < other.x) ||
-                   (x == other.x && line_id < other.line_id) ||
-                   (x == other.x && line_id == other.line_id && y < other.y);
+        bool operator<(const Endpoint &endpoint) const {
+            return (x < endpoint.x) ||
+                   (x == endpoint.x && is_right() < endpoint.is_right()) ||
+                   (x == endpoint.x && is_right() == endpoint.is_right() && y < endpoint.y);
+        }
+
+        bool is_right() const {
+            return x > other->x;
         }
     };
 
 
-    static std::vector <Endpoint> draw_lines(unsigned long n, RealType min, RealType max) {
+    static std::vector<Endpoint> draw_endpoints(unsigned long n, RealType min, RealType max) {
 
-        std::vector <Endpoint> endpoints(n * 2);
+        std::vector<Endpoint> endpoints(n * 2);
 
         std::random_device rnd_device;
         std::mt19937 mersenne_engine(rnd_device());
@@ -40,18 +49,26 @@ public:
         return endpoints;
     }
 
-
-    static void print(const std::vector <Endpoint> &lines) {
-        for (auto i : lines) {
-            std::cout << i.x << " " << i.y << " " << i.line_id << std::endl;
+    static void bind(std::vector<Endpoint> &endpoints) {
+        for (int i = 0; i < endpoints.size() / 2; i++) {
+            endpoints[2 * i].other = &endpoints[2 * i + 1];
+            endpoints[2 * i + 1].other = &endpoints[2 * i];
         }
     }
 
 
-    static std::vector <Endpoint> find_intersections(std::vector <Endpoint> &lines) {
-        std::vector <Endpoint> intersections;
-        std::sort(lines.begin(), lines.end());
-        return lines;
+    static void print(const std::vector<Endpoint> &endpoints) {
+        for (auto endpoint : endpoints) {
+            std::cout << endpoint.x << " " << endpoint.y << " " << std::endl;
+        }
+    }
+
+
+    static std::vector<Endpoint> find_intersections(std::vector<Endpoint> &endpoints) {
+        bind(endpoints);
+        std::sort(endpoints.begin(), endpoints.end());
+        print(endpoints);
+        return endpoints;
     }
 
 private:
@@ -64,20 +81,21 @@ private:
 
         template<class Generator>
         Endpoint operator()(Generator &g) {
-            return Endpoint(dist(g), dist(g), count++ % 2);
+            Endpoint endpoint(dist(g), dist(g));
+            count++;
+            return endpoint;
         }
 
     private:
         unsigned long count = 0;
-        std::uniform_real_distribution <RealType> dist;
+        std::uniform_real_distribution<RealType> dist;
     };
 
 
 };
 
 int main() {
-    std::vector <SweepLines<double>::Endpoint> lines = SweepLines<double>::draw_lines(10, 0, 10);
-    lines = SweepLines<double>::find_intersections(lines);
-    SweepLines<double>::print(lines);
+    std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(10, 0, 10);
+    SweepLines<double>::find_intersections(endpoints);
     return 0;
 }
