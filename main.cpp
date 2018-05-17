@@ -55,6 +55,42 @@ public:
         return endpoints;
     }
 
+    static void print(const std::vector<Endpoint> &endpoints) {
+        for (auto &endpoint : endpoints) {
+            std::cout << endpoint.x << " " << endpoint.y << " " << std::endl;
+        }
+    }
+
+    static bool any_segments_intersect(std::vector<Endpoint> &endpoints) {
+        std::set<Endpoint> T;
+        bind(endpoints);
+        std::sort(endpoints.begin(), endpoints.end());
+        print(endpoints);
+        for (auto &endpoint : endpoints) {
+            if (endpoint.is_right()) {
+                auto it = T.find(*endpoint.other);
+                if (*it != *T.begin() &&
+                    *it != *std::prev(T.end()) &&
+                    intersect(*std::prev(it), *std::next(it))) {
+                    return true;
+                }
+                T.erase(*it->other);
+            } else {
+                T.insert(endpoint);
+                auto it = T.find(endpoint);
+                if ((*it != *T.begin() &&
+                     intersect(*std::prev(it), *it)) ||
+                    (*it != *std::prev(T.end()) &&
+                    intersect(*it, *std::next(it)))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+private:
+
     static void bind(std::vector<Endpoint> &endpoints) {
         for (int i = 0; i < endpoints.size() / 2; i++) {
             endpoints[2 * i].other = &endpoints[2 * i + 1];
@@ -62,22 +98,19 @@ public:
         }
     }
 
-
-    static void print(const std::vector<Endpoint> &endpoints) {
-        for (auto endpoint : endpoints) {
-            std::cout << endpoint.x << " " << endpoint.y << " " << std::endl;
+    static bool intersect(Endpoint above, Endpoint below) {
+        if (above.other->x < below.other->x) {
+            return value_at(*below.other, above.other->x) >= above.other->y;
+        } else {
+            return value_at(*above.other, below.other->x) <= below.other->y;
         }
     }
 
-
-    static std::vector<Endpoint> find_intersections(std::vector<Endpoint> &endpoints) {
-        bind(endpoints);
-        std::sort(endpoints.begin(), endpoints.end());
-        print(endpoints);
-        return endpoints;
+    static RealType value_at(Endpoint endpoint, RealType x) {
+        RealType a = (endpoint.other->y - endpoint.y) / (endpoint.other->x - endpoint.x);
+        return endpoint.y + a * (x - endpoint.x);
     }
 
-private:
     class uniform_endpoint_distribution {
 
     public:
@@ -87,21 +120,20 @@ private:
 
         template<class Generator>
         Endpoint operator()(Generator &g) {
-            Endpoint endpoint(dist(g), dist(g));
-            count++;
-            return endpoint;
+            return Endpoint(dist(g), dist(g));
         }
 
     private:
-        unsigned long count = 0;
         std::uniform_real_distribution<RealType> dist;
     };
-
-
 };
 
 int main() {
-    std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(10, 0, 10);
-    SweepLines<double>::find_intersections(endpoints);
+//    std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(10, 0, 10);
+    std::vector<SweepLines<double>::Endpoint> endpoints = {SweepLines<double>::Endpoint(0, 2),
+                                                           SweepLines<double>::Endpoint(2, 0),
+                                                           SweepLines<double>::Endpoint(0, 0),
+                                                           SweepLines<double>::Endpoint(2, 2)};
+    std::cout << SweepLines<double>::any_segments_intersect(endpoints) << std::endl;
     return 0;
 }
