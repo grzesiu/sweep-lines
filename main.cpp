@@ -1,10 +1,8 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
-#include <map>
-#include <memory>
 #include <random>
-#include <utility>
+#include <set>
 
 template<class RealType = double>
 class SweepLines {
@@ -27,6 +25,14 @@ public:
             return (x < endpoint.x) ||
                    (x == endpoint.x && is_right() < endpoint.is_right()) ||
                    (x == endpoint.x && is_right() == endpoint.is_right() && y < endpoint.y);
+        }
+
+        bool operator!=(const Endpoint &endpoint) const {
+            return other != endpoint.other;
+        }
+
+        bool operator==(const Endpoint &endpoint) const {
+            return other == endpoint.other;
         }
 
         bool is_right() const {
