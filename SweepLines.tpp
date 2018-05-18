@@ -52,10 +52,10 @@ void SweepLines<RealType>::print(const std::vector<Endpoint> &endpoints) {
 
 template<typename RealType>
 bool SweepLines<RealType>::any_segments_intersect(std::vector<Endpoint> &endpoints) {
+    print(endpoints);
     std::set<Endpoint> T;
     bind(endpoints);
     std::sort(endpoints.begin(), endpoints.end());
-    print(endpoints);
     for (auto &endpoint : endpoints) {
         if (endpoint.is_right()) {
             auto it = T.find(*endpoint.other);

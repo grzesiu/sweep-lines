@@ -13,11 +13,13 @@ public:
     class Endpoint {
         friend class SweepLines;
 
-        RealType x;
-        RealType y;
         Endpoint *other;
 
     public:
+
+        RealType x;
+        RealType y;
+
         Endpoint();
 
         Endpoint(RealType x, RealType y);
