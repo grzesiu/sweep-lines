@@ -3,4 +3,4 @@ project(sweep_lines)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(sweep_lines main.cpp)
+add_executable(sweep_lines main.cpp SweepLines.tpp SweepLines.hpp)
