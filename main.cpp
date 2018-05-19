@@ -5,7 +5,7 @@
 int main(int argc, char **argv) {
     double min = -20000;
     double max = 20000;
-    double n = 2;
+    std::size_t n = 2;
 
     std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(n, min, max);
 //    std::vector<SweepLines<double>::Endpoint> endpoints = {SweepLines<double>::Endpoint(0, 2),

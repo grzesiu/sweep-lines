@@ -33,7 +33,7 @@ public:
         bool is_right() const;
     };
 
-    static std::vector<Endpoint> draw_endpoints(unsigned long n, RealType min, RealType max);
+    static std::vector<Endpoint> draw_endpoints(std::size_t n, RealType min, RealType max);
 
     static void print(const std::vector<Endpoint> &endpoints);
 

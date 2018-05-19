@@ -29,7 +29,7 @@ bool SweepLines<RealType>::Endpoint::is_right() const {
 
 template<typename RealType>
 std::vector<typename SweepLines<RealType>::Endpoint>
-SweepLines<RealType>::draw_endpoints(unsigned long n, RealType min, RealType max) {
+SweepLines<RealType>::draw_endpoints(std::size_t n, RealType min, RealType max) {
 
     std::vector<Endpoint> endpoints(n * 2);
 
