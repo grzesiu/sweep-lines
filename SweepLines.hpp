@@ -13,7 +13,7 @@ public:
     class Endpoint {
         friend class SweepLines;
 
-        Endpoint *other;
+        std::size_t other_id;
 
     public:
 
@@ -33,14 +33,19 @@ public:
         bool is_right() const;
     };
 
+    friend class Endpoint;
+
+    explicit SweepLines(std::vector<Endpoint> endpoints);
+
     static std::vector<Endpoint> draw_endpoints(std::size_t n, RealType min, RealType max);
 
-    static void print(const std::vector<Endpoint> &endpoints);
+    void print();
 
-    static bool any_segments_intersect(std::vector<Endpoint> &endpoints);
+    bool any_segments_intersect();
 
 private:
 
+    std::vector<Endpoint> endpoints;
 
     class uniform_endpoint_distribution {
 
@@ -54,11 +59,11 @@ private:
         std::uniform_real_distribution<RealType> dist;
     };
 
-    static void bind(std::vector<Endpoint> &endpoints);
+    void bind(std::vector<std::size_t> p);
 
-    static bool intersect(Endpoint above, Endpoint below);
+    bool intersect(Endpoint above, Endpoint below);
 
-    static RealType value_at(Endpoint endpoint, RealType x);
+    RealType value_at(Endpoint endpoint, RealType x);
 
 };
 

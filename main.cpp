@@ -8,6 +8,9 @@ int main(int argc, char **argv) {
     std::size_t n = 2;
 
     std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(n, min, max);
+
+    SweepLines<double> sl(endpoints);
+
 //    std::vector<SweepLines<double>::Endpoint> endpoints = {SweepLines<double>::Endpoint(0, 2),
 //                                                           SweepLines<double>::Endpoint(2, 0),
 //                                                           SweepLines<double>::Endpoint(0, 0),
@@ -29,7 +32,7 @@ int main(int argc, char **argv) {
 
     glutSwapBuffers();
 
-    std::cout << SweepLines<double>::any_segments_intersect(endpoints) << std::endl;
+    std::cout << sl.any_segments_intersect() << std::endl;
 
     glutMainLoop();
 

@@ -1,4 +1,7 @@
 template<typename RealType>
+SweepLines<RealType>::SweepLines(std::vector<Endpoint> endpoints) : endpoints(endpoints) {}
+
+template<typename RealType>
 SweepLines<RealType>::Endpoint::Endpoint() {}
 
 template<typename RealType>
@@ -13,19 +16,18 @@ bool SweepLines<RealType>::Endpoint::operator<(const Endpoint &endpoint) const {
 
 template<typename RealType>
 bool SweepLines<RealType>::Endpoint::operator!=(const Endpoint &endpoint) const {
-    return other != endpoint.other;
+    return other_id != endpoint.other_id;
 }
 
 template<typename RealType>
 bool SweepLines<RealType>::Endpoint::operator==(const Endpoint &endpoint) const {
-    return other == endpoint.other;
+    return other_id == endpoint.other_id;
 }
 
 template<typename RealType>
 bool SweepLines<RealType>::Endpoint::is_right() const {
-    return x > other->x;
+    return x > endpoints[other_id].x;
 }
-
 
 template<typename RealType>
 std::vector<typename SweepLines<RealType>::Endpoint>
@@ -44,27 +46,27 @@ SweepLines<RealType>::draw_endpoints(std::size_t n, RealType min, RealType max) 
 }
 
 template<typename RealType>
-void SweepLines<RealType>::print(const std::vector<Endpoint> &endpoints) {
+void SweepLines<RealType>::print() {
     for (auto &endpoint : endpoints) {
         std::cout << endpoint.x << " " << endpoint.y << " " << std::endl;
     }
 }
 
 template<typename RealType>
-bool SweepLines<RealType>::any_segments_intersect(std::vector<Endpoint> &endpoints) {
-    print(endpoints);
+bool SweepLines<RealType>::any_segments_intersect() {
+    print();
     std::set<Endpoint> T;
-    bind(endpoints);
+    bind();
     std::sort(endpoints.begin(), endpoints.end());
     for (auto &endpoint : endpoints) {
         if (endpoint.is_right()) {
-            auto it = T.find(*endpoint.other);
+            auto it = T.find(endpoints[endpoint.other_id]);
             if (*it != *T.begin() &&
                 *it != *std::prev(T.end()) &&
                 intersect(*std::prev(it), *std::next(it))) {
                 return true;
             }
-            T.erase(*it->other);
+            T.erase(endpoints[it->other_id]);
         } else {
             T.insert(endpoint);
             auto it = T.find(endpoint);
@@ -80,26 +82,25 @@ bool SweepLines<RealType>::any_segments_intersect(std::vector<Endpoint> &endpoin
 }
 
 template<typename RealType>
-void SweepLines<RealType>::bind(std::vector<Endpoint> &endpoints) {
+void SweepLines<RealType>::bind(std::vector<std::size_t> p) {
     for (int i = 0; i < endpoints.size() / 2; i++) {
-        endpoints[2 * i].other = &endpoints[2 * i + 1];
-        endpoints[2 * i + 1].other = &endpoints[2 * i];
+        endpoints[2 * i].other_id = p[2 * i + 1];
+        endpoints[2 * i + 1].other_id = p[2 * i];
     }
 }
 
-
 template<typename RealType>
 bool SweepLines<RealType>::intersect(Endpoint above, Endpoint below) {
-    if (above.other->x < below.other->x) {
-        return value_at(*below.other, above.other->x) >= above.other->y;
+    if (endpoints[above.other_id]->x < endpoints[below.other_id]->x) {
+        return value_at(endpoints[below.other_id], endpoints[above.other_id]->x) >= endpoints[above.other_id]->y;
     } else {
-        return value_at(*above.other, below.other->x) <= below.other->y;
+        return value_at(endpoints[above.other_id], endpoints[below.other_id]->x) >= endpoints[below.other_id]->y;
     }
 }
 
 template<typename RealType>
 RealType SweepLines<RealType>::value_at(Endpoint endpoint, RealType x) {
-    RealType a = (endpoint.other->y - endpoint.y) / (endpoint.other->x - endpoint.x);
+    RealType a = (endpoints[endpoint.other_id]->y - endpoint.y) / (endpoints[endpoint.other_id]->x - endpoint.x);
     return endpoint.y + a * (x - endpoint.x);
 }
 
