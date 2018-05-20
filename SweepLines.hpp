@@ -14,6 +14,7 @@ public:
         friend class SweepLines;
 
         std::size_t other_id;
+        bool is_right;
 
     public:
 
@@ -30,7 +31,6 @@ public:
 
         bool operator==(const Endpoint &endpoint) const;
 
-        bool is_right() const;
     };
 
     friend class Endpoint;
@@ -59,7 +59,7 @@ private:
         std::uniform_real_distribution<RealType> dist;
     };
 
-    void bind(std::vector<std::size_t> p);
+    void bind();
 
     bool intersect(Endpoint above, Endpoint below);
 
