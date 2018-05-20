@@ -9,11 +9,10 @@ int main(int argc, char **argv) {
 
     std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(n, min, max);
 
-
-//    std::vector<SweepLines<double>::Endpoint> endpoints = {SweepLines<double>::Endpoint(4726.26, 8589.82),
-//                                                           SweepLines<double>::Endpoint(9110.47, -15380.7),
-//                                                           SweepLines<double>::Endpoint(7536.84, -608.336),
-//                                                           SweepLines<double>::Endpoint(811.205, -18673.7)};
+//    std::vector<SweepLines<double>::Endpoint> endpoints = {SweepLines<double>::Endpoint(-19818.5, -11035.3),
+//                                                           SweepLines<double>::Endpoint(-14801.4, 18975.5),
+//                                                           SweepLines<double>::Endpoint(17621.1, -3295.51),
+//                                                           SweepLines<double>::Endpoint(-12031, -6782.57)};
 
     SweepLines<double> sl(endpoints);
 
