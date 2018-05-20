@@ -49,12 +49,24 @@ void SweepLines<RealType>::print() {
     }
 }
 
+
+template<typename RealType>
+void SweepLines<RealType>::print_with_other() {
+    for (auto &endpoint : endpoints) {
+        std::cout << endpoint.x << " " << endpoint.y << " " << endpoints[endpoint.other_id].x << " "
+                  << endpoints[endpoint.other_id].y << " " << std::endl;
+    }
+}
+
 template<typename RealType>
 bool SweepLines<RealType>::any_segments_intersect() {
-    std::set<Endpoint> T;
+    std::set<Endpoint, typename SweepLines<RealType>::Endpoint::T_compare> T;
+    print();
     bind();
+    print_with_other();
     for (auto &endpoint : endpoints) {
         if (endpoint.is_right) {
+            std::cout << "r";
             auto it = T.find(endpoints[endpoint.other_id]);
             if (*it != *T.begin() &&
                 *it != *std::prev(T.end()) &&
@@ -63,6 +75,7 @@ bool SweepLines<RealType>::any_segments_intersect() {
             }
             T.erase(endpoints[it->other_id]);
         } else {
+            std::cout << "l";
             T.insert(endpoint);
             auto it = T.find(endpoint);
             if ((*it != *T.begin() &&

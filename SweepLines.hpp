@@ -31,6 +31,11 @@ public:
 
         bool operator==(const Endpoint &endpoint) const;
 
+        struct T_compare {
+            bool operator() (const Endpoint &e1, const Endpoint &e2) const {
+                return e1.y > e2.y;
+            }
+        };
     };
 
     friend class Endpoint;
@@ -40,6 +45,8 @@ public:
     static std::vector<Endpoint> draw_endpoints(std::size_t n, RealType min, RealType max);
 
     void print();
+
+    void print_with_other();
 
     bool any_segments_intersect();
 
