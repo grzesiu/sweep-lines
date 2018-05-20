@@ -32,7 +32,7 @@ public:
         bool operator==(const Endpoint &endpoint) const;
 
         struct T_compare {
-            bool operator() (const Endpoint &e1, const Endpoint &e2) const {
+            bool operator()(const Endpoint &e1, const Endpoint &e2) const {
                 return e1.y > e2.y;
             }
         };
@@ -68,9 +68,7 @@ private:
 
     void bind();
 
-    bool intersect(Endpoint above, Endpoint below);
-
-    RealType value_at(Endpoint endpoint, RealType x);
+    bool intersect(const Endpoint &above, const Endpoint &below);
 
 };
 

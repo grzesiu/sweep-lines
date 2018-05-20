@@ -7,7 +7,12 @@ int main(int argc, char **argv) {
     double max = 20000;
     std::size_t n = 2;
 
-    std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(n, min, max);
+//    std::vector<SweepLines<double>::Endpoint> endpoints = SweepLines<double>::draw_endpoints(n, min, max);
+
+    std::vector<SweepLines<double>::Endpoint> endpoints = {SweepLines<double>::Endpoint(7892.15, 7148.6),
+                                                           SweepLines<double>::Endpoint(8864.42, 17650.3),
+                                                           SweepLines<double>::Endpoint(-17802.6, 12923.2),
+                                                           SweepLines<double>::Endpoint(8864.42, -13799)};
 
     SweepLines<double> sl(endpoints);
 

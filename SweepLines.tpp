@@ -49,7 +49,6 @@ void SweepLines<RealType>::print() {
     }
 }
 
-
 template<typename RealType>
 void SweepLines<RealType>::print_with_other() {
     for (auto &endpoint : endpoints) {
@@ -61,7 +60,9 @@ void SweepLines<RealType>::print_with_other() {
 template<typename RealType>
 bool SweepLines<RealType>::any_segments_intersect() {
     std::set<Endpoint, typename SweepLines<RealType>::Endpoint::T_compare> T;
+    print();
     bind();
+    print();
     for (auto &endpoint : endpoints) {
         if (endpoint.is_right) {
             auto it = T.find(endpoints[endpoint.other_id]);
@@ -110,18 +111,14 @@ void SweepLines<RealType>::bind() {
 }
 
 template<typename RealType>
-bool SweepLines<RealType>::intersect(Endpoint above, Endpoint below) {
-    if (endpoints[above.other_id].x < endpoints[below.other_id].x) {
-        return value_at(endpoints[below.other_id], endpoints[above.other_id].x) >= endpoints[above.other_id].y;
-    } else {
-        return value_at(endpoints[above.other_id], endpoints[below.other_id].x) <= endpoints[below.other_id].y;
-    }
-}
-
-template<typename RealType>
-RealType SweepLines<RealType>::value_at(Endpoint endpoint, RealType x) {
-    RealType a = (endpoints[endpoint.other_id].y - endpoint.y) / (endpoints[endpoint.other_id].x - endpoint.x);
-    return endpoint.y + a * (x - endpoint.x);
+bool SweepLines<RealType>::intersect(const Endpoint &e1, const Endpoint &e2) {
+    return (((e2.x - e1.x) * (endpoints[e1.other_id].y - e1.y) - (e2.y - e1.y) * (endpoints[e1.other_id].x - e1.x))
+            * ((endpoints[e2.other_id].x - e1.x) * (endpoints[e1.other_id].y - e1.y) -
+               (endpoints[e2.other_id].y - e1.y) * (endpoints[e1.other_id].x - e1.x)) < 0)
+           &&
+           (((e1.x - e2.x) * (endpoints[e2.other_id].y - e2.y) - (e1.y - e2.y) * (endpoints[e2.other_id].x - e2.x))
+            * ((endpoints[e1.other_id].x - e2.x) * (endpoints[e2.other_id].y - e2.y) -
+               (endpoints[e1.other_id].y - e2.y) * (endpoints[e2.other_id].x - e2.x)) < 0);
 }
 
 template<typename RealType>
