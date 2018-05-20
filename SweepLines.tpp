@@ -115,10 +115,11 @@ void SweepLines<RealType>::bind() {
 
 template<typename RealType>
 bool SweepLines<RealType>::intersect(Endpoint above, Endpoint below) {
+    std::cout << above.y << " " << below.y << std::endl;
     if (endpoints[above.other_id].x < endpoints[below.other_id].x) {
         return value_at(endpoints[below.other_id], endpoints[above.other_id].x) >= endpoints[above.other_id].y;
     } else {
-        return value_at(endpoints[above.other_id], endpoints[below.other_id].x) >= endpoints[below.other_id].y;
+        return value_at(endpoints[above.other_id], endpoints[below.other_id].x) <= endpoints[below.other_id].y;
     }
 }
 
