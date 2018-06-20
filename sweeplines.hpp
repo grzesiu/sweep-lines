@@ -72,4 +72,4 @@ private:
 
 };
 
-#include "SweepLines.tpp"
+#include "sweeplines.tpp"

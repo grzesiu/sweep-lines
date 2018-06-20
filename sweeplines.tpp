@@ -1,5 +1,3 @@
-#include "SweepLines.hpp"
-
 template<typename RealType>
 SweepLines<RealType>::SweepLines(std::vector<Endpoint> endpoints) : endpoints(endpoints) {}
 
@@ -60,9 +58,7 @@ void SweepLines<RealType>::print_with_other() {
 template<typename RealType>
 bool SweepLines<RealType>::any_segments_intersect() {
     std::set<Endpoint, typename SweepLines<RealType>::Endpoint::T_compare> T;
-    print();
     bind();
-    print();
     for (auto &endpoint : endpoints) {
         if (endpoint.is_right) {
             auto it = T.find(endpoints[endpoint.other_id]);
